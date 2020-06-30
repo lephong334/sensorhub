@@ -1,0 +1,32 @@
+Login: 
+POST
+https://sensorhub.tech/api/login
+{
+	"email":"nxthongbk@gmail.com",
+	"password":"1_Abc_123"
+}
+-> response: token
+
+
+
+Register:
+POST
+https://sensorhub.tech/api/register
+{
+	"name":"thong",
+	"email":"nxthongbk10@gmail.com",
+	"password":"1_Abc_123"
+}
+-> response: token
+
+
+
+Get User Info: GET 
+https://sensorhub.tech/api/me
+Authorization: token
+
+
+
+User Logout: POST
+https://sensorhub.tech/api/me/logout
+Authorization: token
