@@ -1,4 +1,6 @@
 const axios = require("axios");
+var host = 'https://sensorhub.tech';
+var apiURL = '/api';
 var authToken = '';
 
 exports.renderLoginPage = (req, res) => {
@@ -6,19 +8,20 @@ exports.renderLoginPage = (req, res) => {
 };
 
 exports.login = (req, res) => {
-    var url = "https://sensorhub.tech/api/login";
     var user = {
-        "email": "nxthongbk@gmail.com",
-        "password": "1_Abc_123"
+        "email": req.body.email,
+        "password": req.body.password
     };
-    axios.post(url, user)
+    var path = host + apiURL + "/login";
+    axios.post(path, user)
         .then(function (response) {
             console.log(response);
             authToken = response.data.token;
-            res.redirect('/user');
+            res.render('user');
         })
         .catch(function (error) {
             console.log(error);
+            res.render('login');
         });
 };
 
@@ -27,28 +30,33 @@ exports.renderRegisterPage = (req, res) => {
 };
 
 exports.register = (req, res) => {
-    var url = "https://sensorhub.tech/api/register";
     var user = {
-        "name": "thong",
-        "email": "nxthongbk10@gmail.com",
-        "password": "1_Abc_123"
+        "name": req.body.name,
+        "email": req.body.email,
+        "password": req.body.password
     };
-    axios.post(url, user)
+    var path = host + apiURL + "/register";
+    axios.post(path, user)
         .then(function (response) {
             console.log(response);
+            res.render('user');
         })
         .catch(function (error) {
             console.log(error);
+            res.render('register');
         });
 };
 
-exports.getUserInfo = (req, res) => {
+exports.renderUserPage = (req, res) => {
     res.render('user');
-    var url = 'https://sensorhub.tech/api/me';
+};
+
+exports.getUserInfo = (req, res) => {
+    var path = host + apiURL + '/me';
     var headers = {
         'Authorization': authToken
     };
-    axios.get(url, {headers: headers})
+    axios.get(path, { headers: headers })
         .then(function (response) {
             console.log(response);
         })
@@ -58,14 +66,14 @@ exports.getUserInfo = (req, res) => {
 };
 
 exports.userLogout = (req, res) => {
-    var url = 'https://sensorhub.tech/api/me/logout';
+    var path = host + apiURL + '/me/logout';
     var headers = {
         'Authorization': authToken
     };
-    axios.post(url, null, {headers: headers})
+    axios.post(path, null, { headers: headers })
         .then(function (response) {
             console.log(response);
-            res.redirect('login');
+            res.render('login');
         })
         .catch(function (error) {
             console.log(error);
