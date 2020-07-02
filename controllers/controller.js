@@ -45,12 +45,10 @@ exports.register = (req, res) => {
 exports.getUserInfo = (req, res) => {
     res.render('user');
     var url = 'https://sensorhub.tech/api/me';
-    var options = {
-        headers: {
-            'Authorization': authToken
-        }
+    var headers = {
+        'Authorization': authToken
     };
-    axios.get(url, options)
+    axios.get(url, {headers: headers})
         .then(function (response) {
             console.log(response);
         })
