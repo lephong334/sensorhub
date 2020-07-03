@@ -1,4 +1,5 @@
 const axios = require("axios");
+const User = require('../model/user');
 var host = 'https://sensorhub.tech';
 var apiURL = '/api';
 var authToken = '';
@@ -7,7 +8,7 @@ exports.renderLoginPage = (req, res) => {
     res.render('login');
 };
 
-exports.login = (req, res) => {
+exports.loginPost = (req, res) => {
     var user = {
         "email": req.body.email,
         "password": req.body.password
@@ -17,11 +18,11 @@ exports.login = (req, res) => {
         .then(function (response) {
             console.log(response);
             authToken = response.data.token;
-            res.render('user');
+            res.redirect('/user');
         })
         .catch(function (error) {
             console.log(error);
-            res.render('login');
+            res.redirect('/login');
         });
 };
 
@@ -29,7 +30,7 @@ exports.renderRegisterPage = (req, res) => {
     res.render('register');
 };
 
-exports.register = (req, res) => {
+exports.registerPost = (req, res) => {
     var user = {
         "name": req.body.name,
         "email": req.body.email,
@@ -39,33 +40,33 @@ exports.register = (req, res) => {
     axios.post(path, user)
         .then(function (response) {
             console.log(response);
-            res.render('user');
+            res.redirect('/user');
         })
         .catch(function (error) {
             console.log(error);
-            res.render('register');
+            res.redirect('/register');
         });
 };
 
-exports.renderUserPage = (req, res) => {
-    res.render('user');
-};
-
-exports.getUserInfo = (req, res) => {
+exports.userInfoGet = (req, res) => {
     var path = host + apiURL + '/me';
     var headers = {
         'Authorization': authToken
     };
     axios.get(path, { headers: headers })
         .then(function (response) {
-            console.log(response);
+            console.log(response);            
+            var userInfo = new User(response.data);
+            res.render('user', {
+                user: userInfo
+            });
         })
         .catch(function (error) {
             console.log(error);
         });
 };
 
-exports.userLogout = (req, res) => {
+exports.logoutPost = (req, res) => {
     var path = host + apiURL + '/me/logout';
     var headers = {
         'Authorization': authToken
@@ -73,7 +74,7 @@ exports.userLogout = (req, res) => {
     axios.post(path, null, { headers: headers })
         .then(function (response) {
             console.log(response);
-            res.render('login');
+            res.redirect('/login');
         })
         .catch(function (error) {
             console.log(error);

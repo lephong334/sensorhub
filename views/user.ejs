@@ -9,13 +9,15 @@
         id="bootstrap-css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="../controllers/controller.js"></script>
 </head>
 
 <body>
-    User Information
-    <form action="/userInfo" method="GET">
-        <input type="submit" name="userInfo" value="User Info" />
-    </form>
+    <h1>User Information</h1>
+    <div>
+        Name: <%= user.data.name %><br>
+        Email: <%= user.data.email %>
+    </div>
     <form action="/logout" method="POST">
         <input type="submit" name="logout" value="Logout" />
     </form>
