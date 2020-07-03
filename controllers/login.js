@@ -4,17 +4,19 @@ var host = 'https://sensorhub.tech';
 var apiURL = '/api';
 var authToken = '';
 
-exports.renderLoginPage = (req, res) => {
+exports.signin = {};
+
+exports.signin.get = (req, res) => {
     res.render('login');
 };
 
-exports.loginPost = (req, res) => {
+exports.signin.post = (req, res) => {
     var user = {
         "email": req.body.email,
         "password": req.body.password
     };
-    var path = host + apiURL + "/login";
-    axios.post(path, user)
+    var requestURL = host + apiURL + "/login";
+    axios.post(requestURL, user)
         .then(function (response) {
             console.log(response);
             authToken = response.data.token;
@@ -26,18 +28,20 @@ exports.loginPost = (req, res) => {
         });
 };
 
-exports.renderRegisterPage = (req, res) => {
+exports.register = {};
+
+exports.register.get = (req, res) => {
     res.render('register');
 };
 
-exports.registerPost = (req, res) => {
+exports.register.post = (req, res) => {
     var user = {
         "name": req.body.name,
         "email": req.body.email,
         "password": req.body.password
     };
-    var path = host + apiURL + "/register";
-    axios.post(path, user)
+    var requestURL = host + apiURL + "/register";
+    axios.post(requestURL, user)
         .then(function (response) {
             console.log(response);
             res.redirect('/user');
@@ -48,17 +52,20 @@ exports.registerPost = (req, res) => {
         });
 };
 
-exports.userInfoGet = (req, res) => {
-    var path = host + apiURL + '/me';
+exports.userinfo = {};
+
+exports.userinfo.get = (req, res) => {
+    var requestURL = host + apiURL + '/me';
     var headers = {
         'Authorization': authToken
     };
-    axios.get(path, { headers: headers })
+    axios.get(requestURL, { headers: headers })
         .then(function (response) {
-            console.log(response);            
+            console.log(response);
             var userInfo = new User(response.data);
             res.render('user', {
-                user: userInfo
+                user: userInfo,
+                tokens: userInfo.data.tokens
             });
         })
         .catch(function (error) {
@@ -66,17 +73,20 @@ exports.userInfoGet = (req, res) => {
         });
 };
 
-exports.logoutPost = (req, res) => {
-    var path = host + apiURL + '/me/logout';
+exports.signout = {};
+
+exports.signout.post = (req, res) => {
+    var requestURL = host + apiURL + '/me/logout';
     var headers = {
         'Authorization': authToken
     };
-    axios.post(path, null, { headers: headers })
+    axios.post(requestURL, null, { headers: headers })
         .then(function (response) {
             console.log(response);
             res.redirect('/login');
         })
         .catch(function (error) {
             console.log(error);
+            res.redirect('/user');
         });
 };

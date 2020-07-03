@@ -16,10 +16,22 @@
     <h1>User Information</h1>
     <div>
         Name: <%= user.data.name %><br>
-        Email: <%= user.data.email %>
+        Email: <%= user.data.email %><br>
+        <form action="/logout" method="POST">
+            <input type="submit" name="logout" value="Logout" />
+        </form>
+        <div>
+            <table border="1px">
+                <% tokens.forEach(function(token){ %>
+                    <tr>
+                        <td>ID: </td>
+                        <td>
+                            <%= token._id %>
+                        </td>
+                    </tr>
+                <% }); %>
+            </table>
+        </div>
     </div>
-    <form action="/logout" method="POST">
-        <input type="submit" name="logout" value="Logout" />
-    </form>
 </body>
 </html>
